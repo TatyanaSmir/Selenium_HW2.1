@@ -18,7 +18,6 @@ public class ApplicationFormTest {
     @BeforeAll
     static void setUpAll(){
         WebDriverManager.chromedriver().setup();
-        System.setProperty("webdriver.chrome.driver", ConfProperties.getProperty("chromedriver"));
     }
 
     @BeforeEach
