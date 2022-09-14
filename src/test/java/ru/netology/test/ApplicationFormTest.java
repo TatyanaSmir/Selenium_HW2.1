@@ -28,6 +28,7 @@ public class ApplicationFormTest {
         options.addArguments("--no-sandbox");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
+        driver.get("http://localhost:9999");
     }
 
     @AfterEach
@@ -38,10 +39,9 @@ public class ApplicationFormTest {
 
     @Test
     void shouldTestForm() {
-        driver.get("http://localhost:9999");
-        driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("Дуэйн Камушкин");
+        driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("Дуэйн-Гора Камушкин");
         driver.findElement(By.cssSelector("[type=\"tel\"]")).sendKeys("+78005553535");
-        driver.findElement(By.cssSelector(".checkbox__box")).click();
+        driver.findElement(By.cssSelector("[data-test-id=\"agreement\"]")).click();
         driver.findElement(By.cssSelector(".button__text")).click();
         String text = driver.findElement(By.cssSelector("[data-test-id=\"order-success\"]")).getText();
         assertEquals("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.", text.trim());
@@ -49,18 +49,16 @@ public class ApplicationFormTest {
 
     @Test
     void shouldValidationFillNameSurname1() {
-        driver.get("http://localhost:9999");
         driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("");
         driver.findElement(By.cssSelector("[type=\"tel\"]")).sendKeys("");
         driver.findElement(By.cssSelector(".checkbox__box")).click();
         driver.findElement(By.cssSelector(".button__text")).click();
-        String text = driver.findElement(By.cssSelector(".input__sub")).getText();
+        String text = driver.findElement(By.cssSelector("[data-test-id=name].input_invalid .input__sub")).getText();
         assertEquals("Поле обязательно для заполнения", text.trim());
     }
 
     @Test
     void shouldValidationFillNameSurname2() {
-        driver.get("http://localhost:9999");
         driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("Dwayne Johnson");
         driver.findElement(By.cssSelector("[type=\"tel\"]")).sendKeys("");
         driver.findElement(By.cssSelector(".checkbox__box")).click();
@@ -71,8 +69,7 @@ public class ApplicationFormTest {
 
     @Test
     void shouldValidationFillPhone1() {
-        driver.get("http://localhost:9999");
-        driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("Дуэйн Камушкин");
+        driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("Дуэйн-Гора Камушкин");
         driver.findElement(By.cssSelector("[type=\"tel\"]")).sendKeys("");
         driver.findElement(By.cssSelector(".checkbox__box")).click();
         driver.findElement(By.cssSelector(".button__text")).click();
@@ -82,8 +79,7 @@ public class ApplicationFormTest {
 
     @Test
     void shouldValidationFillPhone2() {
-        driver.get("http://localhost:9999");
-        driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("Дуэйн Камушкин");
+        driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("Дуэйн-Гора Камушкин");
         driver.findElement(By.cssSelector("[type=\"tel\"]")).sendKeys("88005553535");
         driver.findElement(By.cssSelector(".checkbox__box")).click();
         driver.findElement(By.cssSelector(".button__text")).click();
@@ -94,13 +90,12 @@ public class ApplicationFormTest {
 
     @Test
     void shouldTryToNotClickOnTheCheckBox() {
-        driver.get("http://localhost:9999");
-        driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("Дуэйн Камушкин");
+        driver.findElement(By.cssSelector("[type=\"text\"]")).sendKeys("Дуэйн-Гора Камушкин");
         driver.findElement(By.cssSelector("[type=\"tel\"]")).sendKeys("+78005553535");
         /*driver.findElement(By.cssSelector(".checkbox__box")).click();*/
         driver.findElement(By.cssSelector(".button__text")).click();
-        String text = driver.findElement(By.cssSelector("[data-test-id=phone] .input__sub")).getText();
-        assertEquals("На указанный номер моб. тел. будет отправлен смс-код для подтверждения заявки на карту. Проверьте, что номер ваш и введен корректно.", text.trim());
+        String text = driver.findElement(By.cssSelector("[data-test-id=agreement].input_invalid")).getText();
+        assertEquals("Я соглашаюсь с условиями обработки и использования моих персональных данных и разрешаю сделать запрос в бюро кредитных историй", text.trim());
 
     }
 }
